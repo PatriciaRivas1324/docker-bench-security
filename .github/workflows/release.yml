@@ -1,0 +1,25 @@
+name: CD - Publicar imagen Docker
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Iniciar sesión en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Construir y subir imagen
+        run: |
+          docker build -t patriciarivas1324/docker-bench-security:latest .
+          docker push patriciarivas1324/docker-bench-security:latest
